@@ -7,10 +7,10 @@ This script reads a list of URLs from a CSV file and prints their HTTP status co
 
 ## Output format
 
-(STATUS_CODE) URL
+`(STATUS_CODE) URL`
 
 Example:
-(200) https://example.com
+`(200) https://example.com`
 
 ## How to Setup
 
