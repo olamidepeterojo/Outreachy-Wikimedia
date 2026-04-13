@@ -30,15 +30,18 @@ def read_urls_from_csv(file_path):
 
 def fetch_status_code(url):
     """
-    Sends a GET request to the given URL and returns the status code.
+    Sends a HEAD request to the given URL and returns the status code.
 
-    Returns None if the request fails.
+    Returns a tuple:
+    - (status_code, reason) if the request is successful
+    - ("Error", error_name) if the request fails
     """
     try:
-        response = requests.get(url, timeout=5)
-        return response.status_code
-    except requests.exceptions.RequestException:
-        return None
+        response = requests.head(url, timeout=5)
+        return response.status_code, response.reason
+    except requests.exceptions.RequestException as e:
+        error_name = type(e).__name__
+        return "Error", error_name
 
 
 def main():
@@ -50,12 +53,13 @@ def main():
     urls = read_urls_from_csv(file_path)
 
     for url in urls:
-        status = fetch_status_code(url)
+        result = fetch_status_code(url)
 
-        if status is not None:
-            print(f"({status}) {url}")
+        if isinstance(result, tuple):
+            status_code, reason = result
+            print(f"({status_code} {reason}) {url}")
         else:
-            print(f"(ERROR) {url}")
+            print(f"(error) {url}")
 
 
 
